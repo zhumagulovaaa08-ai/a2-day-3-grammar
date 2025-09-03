@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English with Mixlass - Interactive English Practice</title>
+    <style>
+        :root {
+            --orange-color: #FF8C00;
+            --light-orange-color: #FFDAB9;
+            --dark-orange-color: #CC7000;
+            --white-color: #FFFFFF;
+            --black-color: #333333;
+            --grey-color: #F0F0F0;
+            --green-color: #4CAF50;
+            --red-color: #F44336;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--grey-color);
+            color: var(--black-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            color: var(--orange-color);
+            font-size: 2.5em;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header p {
+            color: var(--dark-orange-color);
+            margin: 5px 0 0;
+            font-size: 1.1em;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            background-color: var(--white-color);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .exercise-section {
+            margin-bottom: 40px;
+        }
+
+        .exercise-section h2 {
+            font-size: 1.8em;
+            color: var(--black-color);
+            border-bottom: 2px solid var(--orange-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .instruction {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .text-box {
+            background-color: var(--grey-color);
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 1em;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        
+        .question-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .question-item {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .question-item .number {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-right: 15px;
+            color: var(--orange-color);
+        }
+
+        .text-input, .text-input-2 {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 8px 12px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            width: calc(100% - 24px);
+            margin-bottom: 10px;
+        }
+
+        .text-input-2 {
+            border-bottom: 2px solid var(--orange-color);
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            background-color: transparent;
+            width: auto;
+            min-width: 150px;
+            padding: 0 5px;
+        }
+
+        .text-input-2:focus {
+            outline: none;
+            border-bottom-color: var(--dark-orange-color);
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: var(--orange-color);
+            box-shadow: 0 0 5px rgba(255, 140, 0, 0.5);
+        }
+
+        .feedback {
+            margin-left: 10px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .feedback .correct {
+            color: var(--green-color);
+        }
+
+        .feedback .incorrect {
+            color: var(--red-color);
+        }
+        
+        .explanation {
+            font-size: 0.9em;
+            color: var(--black-color);
+            margin-top: 5px;
+            padding-left: 30px;
+            display: none;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .btn-check {
+            background-color: var(--orange-color);
+            color: var(--white-color);
+        }
+
+        .btn-check:hover {
+            background-color: var(--dark-orange-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-reset {
+            background-color: var(--grey-color);
+            color: var(--black-color);
+            border: 2px solid var(--orange-color);
+        }
+
+        .btn-reset:hover {
+            background-color: var(--light-orange-color);
+            transform: translateY(-2px);
+        }
+
+        .highlight-correct {
+            border: 2px solid var(--green-color) !important;
+        }
+
+        .highlight-incorrect {
+            border: 2px solid var(--red-color) !important;
+        }
+        
+        .highlight-correct-2 {
+            border-bottom: 2px solid var(--green-color) !important;
+        }
+
+        .highlight-incorrect-2 {
+            border-bottom: 2px solid var(--red-color) !important;
+        }
+        
+        .explanation-text {
+            color: #555;
+            font-size: 0.9em;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .word-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .word-list li {
+            background-color: var(--orange-color);
+            color: var(--white-color);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .text-part-with-number {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>English with Mixlass</h1>
+        <p>LEARN. SHARE. CONNECT</p>
+    </div>
+
+    <div class="container">
+        <!-- Exercise 2 -->
+        <div class="exercise-section">
+            <h2>2 Complete the text with the correct form of the verbs in the box.</h2>
+            <div class="text-box">
+                <ul class="word-list">
+                    <li>cook</li>
+                    <li>drive</li>
+                    <li>enjoy</li>
+                    <li>fly</li>
+                    <li>not have</li>
+                    <li>not like</li>
+                    <li>read</li>
+                    <li>relax</li>
+                    <li>teach</li>
+                    <li>work</li>
+                </ul>
+                <p><strong>The couple that does it all!</strong></p>
+                <p>Ken and Susie Parker are famous in their home town of Queenstown, New Zealand. Everybody knows them because they do everything! In the mornings, Susie <span class="text-part-with-number"><strong>1</strong> <input type="text" class="text-input-2" id="q2_1"></span> as a shop assistant in a ski shop. In the afternoons she <span class="text-part-with-number"><strong>2</strong> <input type="text" class="text-input-2" id="q2_2"></span> storybooks to children in the local school. In the evenings she <span class="text-part-with-number"><strong>3</strong> <input type="text" class="text-input-2" id="q2_3"></span> Maths classes. Her students <span class="text-part-with-number"><strong>4</strong> <input type="text" class="text-input-2" id="q2_4"></span> her classes because she's a good teacher and she's very funny.</p>
+                <p>Ken <span class="text-part-with-number"><strong>5</strong> <input type="text" class="text-input-2" id="q2_5"></span> a taxi, the school bus and a tourist boat. On Saturdays he's a pilot and he <span class="text-part-with-number"><strong>6</strong> <input type="text" class="text-input-2" id="q2_6"></span> a small plane for groups of tourists.</p>
+                <p>From Monday to Saturday Ken and Susie <span class="text-part-with-number"><strong>7</strong> <input type="text" class="text-input-2" id="q2_7"></span> very much free time, so on Sundays they have a day off. Ken <span class="text-part-with-number"><strong>8</strong> <input type="text" class="text-input-2" id="q2_8"></span> lunch because Susie <span class="text-part-with-number"><strong>9</strong> <input type="text" class="text-input-2" id="q2_9"></span> cooking. She just sits and <span class="text-part-with-number"><strong>10</strong> <input type="text" class="text-input-2" id="q2_10"></span> in the garden.</p>
+            </div>
+            <div id="feedback-2"></div>
+        </div>
+
+        <!-- Exercise 3 -->
+        <div class="exercise-section">
+            <h2>3 Read the answers to questions about Ken and Susie. Write the questions.</h2>
+            <div class="instruction">
+                <p><strong>1 Where does Susie work?</strong> In a ski shop.</p>
+            </div>
+            <ul class="question-list" id="q3-list">
+                <li class="question-item">
+                    <span class="number">2</span> <input type="text" class="text-input" id="q3_2"> She reads to children.
+                </li>
+                <li class="question-item">
+                    <span class="number">3</span> <input type="text" class="text-input" id="q3_3"> Maths classes.
+                </li>
+                <li class="question-item">
+                    <span class="number">4</span> <input type="text" class="text-input" id="q3_4"> Because she's a good teacher.
+                </li>
+                <li class="question-item">
+                    <span class="number">5</span> <input type="text" class="text-input" id="q3_5"> A taxi, a bus, and a boat.
+                </li>
+                <li class="question-item">
+                    <span class="number">6</span> <input type="text" class="text-input" id="q3_6"> A small plane, for groups of tourists.
+                </li>
+                <li class="question-item">
+                    <span class="number">7</span> <input type="text" class="text-input" id="q3_7"> No, she doesn't. She hates cooking.
+                </li>
+                <li class="question-item">
+                    <span class="number">8</span> <input type="text" class="text-input" id="q3_8"> She relaxes in the garden.
+                </li>
+            </ul>
+        </div>
+        
+        <div class="buttons">
+            <button class="btn btn-check" onclick="checkAnswers()">Проверить</button>
+            <button class="btn btn-reset" onclick="resetPage()">Сбросить</button>
+        </div>
+    </div>
+
+    <script>
+        const answers2 = {
+            'q2_1': ['works'],
+            'q2_2': ['reads'],
+            'q2_3': ['teaches'],
+            'q2_4': ['enjoy'],
+            'q2_5': ['drives'],
+            'q2_6': ['flies'],
+            'q2_7': ['don\'t have', 'do not have'],
+            'q2_8': ['cooks'],
+            'q2_9': ['doesn\'t like', 'does not like'],
+            'q2_10': ['relaxes']
+        };
+
+        const answers3 = {
+            'q3_2': ['What does she read to children', 'What does she read'],
+            'q3_3': ['What does she teach', 'What classes does she teach'],
+            'q3_4': ['Why do they enjoy her classes', 'Why do her students enjoy her classes'],
+            'q3_5': ['What does Ken drive', 'What does he drive', 'What does Ken drive and fly'],
+            'q3_6': ['What does he fly', 'What does Ken fly'],
+            'q3_7': ['Does she like cooking', 'Does Susie like cooking'],
+            'q3_8': ['Where does she relax', 'What does she do in the garden']
+        };
+
+        function normalizeText(text) {
+            return text.toLowerCase().replace(/['"`.,?!]/g, '').trim();
+        }
+
+        function checkAnswers() {
+            let allCorrect = true;
+
+            // Check Exercise 2
+            const allInputs2 = document.querySelectorAll('.text-input-2');
+            allInputs2.forEach(input => {
+                const key = input.id;
+                const normalizedAnswer = normalizeText(input.value);
+                const isCorrect = answers2[key].some(ans => normalizeText(ans) === normalizedAnswer);
+
+                input.classList.remove('highlight-correct-2', 'highlight-incorrect-2');
+                
+                const existingExplanation = input.parentNode.querySelector('.explanation-text');
+                if (existingExplanation) {
+                    existingExplanation.remove();
+                }
+
+                if (isCorrect) {
+                    input.classList.add('highlight-correct-2');
+                } else {
+                    input.classList.add('highlight-incorrect-2');
+                    allCorrect = false;
+
+                    const explanationText = document.createElement('span');
+                    explanationText.classList.add('explanation-text');
+                    explanationText.innerHTML = `(Правильно: ${answers2[key].join(' / ')})`;
+                    input.parentNode.insertBefore(explanationText, input.nextSibling);
+                }
+            });
+
+            // Check Exercise 3
+            const q3List = document.getElementById('q3-list').querySelectorAll('.question-item');
+            q3List.forEach(item => {
+                const input = item.querySelector('input');
+                const questionNumber = input.id;
+                const normalizedAnswer = normalizeText(input.value);
+                const isCorrect = answers3[questionNumber].some(ans => normalizeText(ans) === normalizedAnswer);
+                
+                const previousFeedback = item.querySelector('.feedback');
+                if (previousFeedback) previousFeedback.remove();
+
+                const previousExplanation = item.querySelector('.explanation');
+                if (previousExplanation) previousExplanation.remove();
+
+                const feedbackSpan = document.createElement('span');
+                feedbackSpan.classList.add('feedback');
+                
+                input.classList.remove('highlight-correct', 'highlight-incorrect');
+
+                if (isCorrect) {
+                    input.classList.add('highlight-correct');
+                    feedbackSpan.innerHTML = '✔';
+                    feedbackSpan.classList.add('correct');
+                } else {
+                    input.classList.add('highlight-incorrect');
+                    feedbackSpan.innerHTML = '✖';
+                    feedbackSpan.classList.add('incorrect');
+                    allCorrect = false;
+
+                    const explanationDiv = document.createElement('div');
+                    explanationDiv.classList.add('explanation');
+                    explanationDiv.innerHTML = 'Правильный ответ: ' + answers3[questionNumber].join(' или ');
+                    explanationDiv.style.display = 'block';
+                    item.appendChild(explanationDiv);
+                }
+                item.appendChild(feedbackSpan);
+            });
+            
+            if (allCorrect) {
+                alert('Отличная работа! Все ответы верны! 🎉');
+            } else {
+                alert('Некоторые ответы неверны. Посмотрите на отметки и подсказки. 🤔');
+            }
+        }
+
+        function resetPage() {
+            // Reset Exercise 2 inputs
+            const inputs2 = document.querySelectorAll('.text-input-2');
+            inputs2.forEach(input => {
+                input.value = '';
+                input.classList.remove('highlight-correct-2', 'highlight-incorrect-2');
+                const existingExplanation = input.parentNode.querySelector('.explanation-text');
+                if (existingExplanation) {
+                    existingExplanation.remove();
+                }
+            });
+
+            // Reset Exercise 3 inputs and feedback
+            const inputs3 = document.querySelectorAll('.text-input');
+            inputs3.forEach(input => {
+                input.value = '';
+                input.classList.remove('highlight-correct', 'highlight-incorrect');
+                const parentItem = input.closest('.question-item');
+                const feedback = parentItem.querySelector('.feedback');
+                if (feedback) feedback.remove();
+                const explanation = parentItem.querySelector('.explanation');
+                if (explanation) explanation.remove();
+            });
+        }
+    </script>
+
+</body>
+</html>
